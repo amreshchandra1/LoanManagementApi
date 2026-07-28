@@ -23,6 +23,7 @@ namespace LoanManagementApi.Tests
         private IHelper _mockHelper;
         // System Under Test (SUT)
         private LoanController _controller;
+        private IAuditLog _mockAuditLog;
 
         [TestInitialize]
         public void Setup()
@@ -33,10 +34,9 @@ namespace LoanManagementApi.Tests
             _mockHttpContextAccessor = Substitute.For<IHttpContextAccessor>();
             _mockLogin = Substitute.For<ILogin>();
             _mockHelper= Substitute.For<IHelper>();
-
-            // Setup default HttpContext structure to prevent NullReferenceException in Authorization tests
             var httpContext = new DefaultHttpContext();
             _mockHttpContextAccessor.HttpContext.Returns(httpContext);
+            _mockAuditLog=Substitute.For<IAuditLog>();
 
             // Construct the controller instance
             _controller = new LoanController(
@@ -44,7 +44,8 @@ namespace LoanManagementApi.Tests
                 _mockLoanRepository,
                 _mockHttpContextAccessor,
                 _mockLogin,
-                _mockHelper
+                _mockHelper,
+                _mockAuditLog
             );
         }
 
