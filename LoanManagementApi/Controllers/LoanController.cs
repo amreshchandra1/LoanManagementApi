@@ -14,13 +14,15 @@ namespace LoanManagementApi.Controllers
         private readonly ILoan _loanRepository;
         private readonly ILogger<Loan> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHelper _helper;
 
         private readonly ILogin _login;
-        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login) 
+        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper) 
         {
             _loanRepository = loanRepository;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _helper = helper;
             _login = login;
         }
         [HttpPost("UserRegistation")]
@@ -101,7 +103,7 @@ namespace LoanManagementApi.Controllers
             _logger.LogInformation("Initiating EMI calculation. Principal: {Principal}, Rate: {AnnualInterestRate}%, Tenure: {TenureInMonths} months",
          principal, annualInterestRate, tenureInMonths);
 
-            var emi = _loanRepository.CalculateEmi(principal, annualInterestRate, tenureInMonths);
+            var emi = _helper.CalculateEmi(principal, annualInterestRate, tenureInMonths);
 
             _logger.LogInformation("EMI calculation completed successfully. Resulting EMI: {Emi}", emi);
 
