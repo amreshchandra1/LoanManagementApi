@@ -20,7 +20,7 @@ namespace LoanManagementApi.Tests
         private ILogger<Loan> _mockLogger;
         private IHttpContextAccessor _mockHttpContextAccessor;
         private ILogin _mockLogin;
-
+        private IHelper _mockHelper;
         // System Under Test (SUT)
         private LoanController _controller;
 
@@ -32,6 +32,7 @@ namespace LoanManagementApi.Tests
             _mockLogger = Substitute.For<ILogger<Loan>>();
             _mockHttpContextAccessor = Substitute.For<IHttpContextAccessor>();
             _mockLogin = Substitute.For<ILogin>();
+            _mockHelper= Substitute.For<IHelper>();
 
             // Setup default HttpContext structure to prevent NullReferenceException in Authorization tests
             var httpContext = new DefaultHttpContext();
@@ -42,7 +43,8 @@ namespace LoanManagementApi.Tests
                 _mockLogger,
                 _mockLoanRepository,
                 _mockHttpContextAccessor,
-                _mockLogin
+                _mockLogin,
+                _mockHelper
             );
         }
 
@@ -124,7 +126,7 @@ namespace LoanManagementApi.Tests
             int tenure = 12;
             decimal expectedEmi = 4408.40m;
 
-            _mockLoanRepository.CalculateEmi(principal, rate, tenure).Returns(expectedEmi);
+            _mockHelper.CalculateEmi(principal, rate, tenure).Returns(expectedEmi);
 
             // Act
             var result = _controller.CalculateEmi(principal, rate, tenure) as OkObjectResult;
@@ -152,7 +154,11 @@ namespace LoanManagementApi.Tests
 
             // Assert
             Assert.IsNotNull(actionResult);
-            var resultList = actionResult.Value.ToList();
+            var okResult = (OkObjectResult)actionResult.Result;
+            Assert.IsNotNull(okResult);
+
+            var resultList = (okResult.Value as IEnumerable<LoanApplication>).ToList();
+
             Assert.AreEqual(2, resultList.Count);
             Assert.AreEqual(targetUser, resultList[0].UserRegistrationUserName);
         }
