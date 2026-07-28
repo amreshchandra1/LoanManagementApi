@@ -14,10 +14,11 @@ namespace LoanManagementApi.Repository
         {
             _context = context;
         }
-        public void UserRegistation(UserRegistration userRegistration)
+        public int UserRegistation(UserRegistration userRegistration)
         {
             _context.UserRegistration.Add(userRegistration);
-            _context.SaveChanges();
+            int res = _context.SaveChanges();
+            return res;
         }
         public int CreateLoanApplication(LoanApplication loanApplication)
         {

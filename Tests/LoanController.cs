@@ -55,7 +55,7 @@ namespace LoanManagementApi.Tests
             var result = _controller.UserRegistation(userReg);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
             _mockLoanRepository.Received(1).UserRegistation(userReg);
         }
 
@@ -76,7 +76,7 @@ namespace LoanManagementApi.Tests
             var result = _controller.CreateLoanApplication(loanApp);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             Assert.AreEqual(extractedUser, loanApp.UserRegistrationUserName);
             _mockLoanRepository.Received(1).CreateLoanApplication(loanApp);
         }

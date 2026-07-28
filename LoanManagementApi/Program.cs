@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -40,6 +41,20 @@ builder.Services.AddDbContext<EFContext>(
 );
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Host.UseSerilog((hostingContext, loggerConfig) =>
+{
+    if (hostingContext.HostingEnvironment.IsDevelopment())//Added only for dev environment.By using this line serilog will only work for dev environment
+    {
+        loggerConfig.ReadFrom.Configuration(hostingContext.Configuration);
+    }
+    else
+    {
+        loggerConfig
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console();
+    }
+}
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
