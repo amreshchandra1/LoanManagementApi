@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace LoanManagementApi.Controllers
 {
@@ -15,15 +16,17 @@ namespace LoanManagementApi.Controllers
         private readonly ILogger<Loan> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHelper _helper;
-
+        private readonly IAuditLog _auditRepository;
         private readonly ILogin _login;
-        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper) 
+       
+        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper,IAuditLog auditLog) 
         {
             _loanRepository = loanRepository;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _helper = helper;
             _login = login;
+            _auditRepository = auditLog;
         }
         [HttpPost("UserRegistation")]
         public ActionResult UserRegistation(UserRegistration usrRegis)
@@ -46,8 +49,8 @@ namespace LoanManagementApi.Controllers
         public ActionResult CreateLoanApplication(LoanApplication loanApplication)
         {
             _logger.LogInformation("Creating loan application for customer: {CustomerId}", loanApplication.CustomerId);
-            var auth=_httpContextAccessor.HttpContext.Request.Headers.Authorization;
-             loanApplication.UserRegistrationUserName = _login.ReadJWT(auth);
+
+             loanApplication.UserRegistrationUserName = _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
               var res= _loanRepository.CreateLoanApplication(loanApplication);
              if(res>0)
              {
@@ -90,6 +93,12 @@ namespace LoanManagementApi.Controllers
             int result= _loanRepository.ApproveReject(id,ls);
             if (result > 0)
             {
+                var username= _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
+                _auditRepository.LogAction(
+                 string.IsNullOrEmpty(username)? "user not login": username,
+                 "ApproveReject",
+                 $"Loan Application ID: {id} updated to status: {ls}"
+                 );
                 return Ok($"Record Updated {id}");
             }
             else

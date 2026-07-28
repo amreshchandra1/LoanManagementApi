@@ -51,7 +51,7 @@ namespace LoanManagementApi.Repository
         }
         public string ReadJWT(string jwt)
         {
-            string? rawToken = jwt.Replace("Bearer ","");
+            string? rawToken = jwt?.Replace("Bearer ","");
 
             var handler = new JwtSecurityTokenHandler();
 

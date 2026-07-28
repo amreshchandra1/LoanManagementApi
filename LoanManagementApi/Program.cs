@@ -35,6 +35,7 @@ builder.Services.AddScoped<IGenerateToken, GenerateToken>();
 builder.Services.AddScoped<ILoan, Loan>();
 builder.Services.AddScoped<ILogin, Login>();
 builder.Services.AddScoped<IHelper, Helper>();
+builder.Services.AddScoped<IAuditLog, AuditLogRepository>();
 var connectionString = builder.Configuration.GetConnectionString("SQLConnection");
 
 builder.Services.AddDbContext<EFContext>(
