@@ -15,5 +15,11 @@ namespace LoanManagementApi
         public DbSet<Employee> Employee { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<UserRegistration > UserRegistration { get; set; }
+        public DbSet<LoanStatusTracking> LoanStatusTracking { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LoanApplication>()
+        .ToTable(tb => tb.HasTrigger("trr_LoanApplications"));
+        }
     }
 }

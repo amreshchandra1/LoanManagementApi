@@ -86,7 +86,7 @@ namespace LoanManagementApi.Tests
         {
             // Arrange
             var id = Guid.NewGuid();
-            var status = LoanStatus.Approved; // Assumed enum value
+            var status = LoanStatus.ApplicationSubmitted; // Assumed enum value
             _mockLoanRepository.ApproveReject(id, status).Returns(1);
 
             // Act
@@ -103,7 +103,7 @@ namespace LoanManagementApi.Tests
         {
             // Arrange
             var id = Guid.NewGuid();
-            var status = LoanStatus.Rejected;
+            var status = LoanStatus.DisbursementPending;
             _mockLoanRepository.ApproveReject(id, status).Returns(0); // 0 records updated
 
             // Act

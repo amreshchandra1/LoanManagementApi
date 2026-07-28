@@ -39,6 +39,32 @@ namespace LoanManagementApi.Repository
             }
             return result;
         }
+        public int UpdateLoanStatus(Guid id, LoanStatus ls)
+        {
+            int result = 0;
+            var loanApplication = _context.LoanApplications.Find(id);
+            if (loanApplication != null)
+            {
+                loanApplication.Status = ls.ToString();
+                _context.Update(loanApplication);
+                result = _context.SaveChanges();
+            }
+            return result;
+        }
+        public List<LoanStatusTracking> GetLoanStatusTrackings(Guid guid)
+        {
+            var p=
+            _context.LoanStatusTracking
+            .Where(x => x.LoanApplicationId == guid)
+              .Select(x => new LoanStatusTracking
+              {
+               LoanApplicationId = x.LoanApplicationId,
+               Status = x.Status,
+               SubmittedDate = x.SubmittedDate
+              })
+             .ToList();
+            return p;
+        }
         public IActionResult Login(string usrname, string password)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == usrname && u.PasswordHash == password);
@@ -77,6 +103,10 @@ namespace LoanManagementApi.Repository
         public List<LoanApplication> ViewLoanHistoryByUserName(string username)
         {
             return _context.LoanApplications.ToList();
+        }
+        public List<LoanStatusTracking> LoanStatusTracking()
+        {
+            return _context.LoanStatusTracking.ToList();
         }
     }
 }

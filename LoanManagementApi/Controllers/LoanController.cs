@@ -28,7 +28,7 @@ namespace LoanManagementApi.Controllers
             _loanRepository.UserRegistation(usrRegis);
             return Ok();
         }
-      //  [Authorize(Roles ="Admin")]
+       // [Authorize(Roles ="Admin")]
         [HttpPost("CreateLoanApplication")]
         public ActionResult CreateLoanApplication(LoanApplication loanApplication)
         {
@@ -48,6 +48,18 @@ namespace LoanManagementApi.Controllers
             return Ok();
             // Implementation for creating a loan application
         }
+        [HttpGet("UpdateLoanStatus/{id}/{ls}")]
+        public ActionResult UpdateLoanStatus(Guid id, LoanStatus ls)
+        {
+            _loanRepository.UpdateLoanStatus(id, ls);
+            return Ok();
+        }
+        [HttpGet("LoanStatusTracking/{loanid}")]
+        public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTracking(Guid loanid)
+        {
+            return _loanRepository.GetLoanStatusTrackings(loanid).ToList();
+        }
+        //  [Authorize(Roles = "Admin")]
         [HttpPost("ApproveReject")]
         public ActionResult ApproveReject(Guid id, LoanStatus ls)
         {
@@ -68,10 +80,17 @@ namespace LoanManagementApi.Controllers
             var emi=_loanRepository.CalculateEmi(principal,annualInterestRate, tenureInMonths);
             return Ok(emi);
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet("ViewLoanHistoryByUserName/{username}")]
         public ActionResult<IEnumerable<LoanApplication>> ViewLoanHistoryByUserName(string username)
         {
             return _loanRepository.ViewLoanHistoryByUserName(username).ToList();
+        }
+       // [Authorize(Roles = "Admin")]
+        [HttpGet("LoanStatusTracking")]
+        public ActionResult<IEnumerable<LoanStatusTracking>> LoanStatusTracking()
+        {
+            return _loanRepository.LoanStatusTracking().ToList();
         }
     }
 }

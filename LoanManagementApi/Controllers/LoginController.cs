@@ -15,6 +15,7 @@ namespace LoanManagementApi.Controllers
         {
             _loginRepository = login;
         }
+        [AllowAnonymous]
         [HttpPost("GenerateToken")]
         public ActionResult SignIn(string usrname, string password)
         {
