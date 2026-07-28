@@ -84,8 +84,10 @@ Authentication
   - Response: `{ "token": "<jwt>", "expires": "2026-..." }`
 
 Loans
-- `GET /api/loans`
-  - Returns list of loans (paged)
+- `api/Loan/UserRegistation`
+  - Use to register user with username ans password.Which will be used to generate token
+- `GET [/api/Login/GenerateToken?usrname=amresh&password=password`]
+  - Returns JWT Token
 - `GET /api/loans/{id}`
   - Returns loan details
 - `POST /api/loans`
