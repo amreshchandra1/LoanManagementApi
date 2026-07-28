@@ -84,28 +84,20 @@ Authentication
   - Response: `{ "token": "<jwt>", "expires": "2026-..." }`
 
 Loans
-- `GET /api/loans`
-  - Returns list of loans (paged)
-- `GET /api/loans/{id}`
-  - Returns loan details
-- `POST /api/loans`
-  - Create a new loan
-  - Request example:
-    `{ "borrowerId": 123, "amount": 5000.00, "termMonths": 24, "interestRate": 7.5 }`
-- `PUT /api/loans/{id}`
-  - Update loan data
-- `DELETE /api/loans/{id}`
-  - Soft-delete or remove loan
-- `POST /api/loans/{id}/approve`
-  - Approve loan (role: loan_officer)
-- `POST /api/loans/{id}/repay`
-  - Record repayment:
-    `{ "amount": 250.00, "date": "2026-01-10" }`
-
-Borrowers
-- `GET /api/borrowers`
-- `GET /api/borrowers/{id}`
-- `POST /api/borrowers`
+- `api/Loan/UserRegistation`
+  - Use to register user with username ans password.Which will be used to generate token
+- `GET [/api/Login/GenerateToken?usrname=amresh&password=password`]
+  - Returns JWT Token
+- `GET api/Loan/CreateLoanApplication`
+  - Create Loan Application.Return Success or Fail
+- `POST api/Loan/UpdateLoanStatus/DA3DA74A-C515-4DA2-A56F-517721F3DAF1/DocumentsVerified`
+  - Update status of loan
+- `POST api/Loan/LoanStatusTracking/DA3DA74A-C515-4DA2-A56F-517721F3DAF1`
+  - Get Loan Status by LoanAppId
+- `POST api/ViewLoanHistoryByUserName/amresh`
+  - Get all Loan created by user.
+- `POST api/Loan/LoanStatusTracking/DA3DA74A-C515-4DA2-A56F-517721F3DAF1`
+  - Get Loan Status
 
 Common responses
 - 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 500 Internal Server Error
