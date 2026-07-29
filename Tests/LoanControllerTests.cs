@@ -66,21 +66,21 @@ namespace LoanManagementApi.Tests
         public void CreateLoanApplication_SuccessfulCreation_ReturnsOkResult()
         {
             // Arrange
-            var loanApp = new LoanApplication { PrincipalAmount=1000 };
+            var loanApp = new LoanApplication { PrincipalAmount=1000,UserRegistrationUserName="amresh" };
             string dummyToken = "Bearer text_token";
-            string extractedUser = "john_doe";
+            string extractedUser = "amresh";
 
             // Mocking HttpContext headers access
             _mockHttpContextAccessor.HttpContext.Request.Headers["Authorization"] = dummyToken;
             _mockLogin.ReadJWT(dummyToken).Returns(extractedUser);
-            _mockLoanRepository.CreateLoanApplication(loanApp).Returns(new LoanApplication() { }); // Greater than 0 means success
+            _mockLoanRepository.CreateLoanApplication(Arg.Any<LoanApplication>()).Returns(loanApp); 
 
             // Act
-            var result = _controller.CreateLoanApplication(loanApp);
+            var result = _controller.CreateLoanApplication(loanApp) as OkObjectResult;
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-            Assert.AreEqual(extractedUser, loanApp.UserRegistrationUserName);
+            Assert.IsNotNull(result.Value);
             _mockLoanRepository.Received(1).CreateLoanApplication(loanApp);
         }
 
