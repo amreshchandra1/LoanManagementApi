@@ -1,4 +1,5 @@
-﻿using LoanManagementApi.Model;
+﻿using FluentValidation;
+using LoanManagementApi.Model;
 using LoanManagementApi.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +21,8 @@ namespace LoanManagementApi.Controllers
         private readonly IAuditLog _auditRepository;
         private readonly ILogin _login;
         private readonly string username;
-        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper,IAuditLog auditLog) 
+        private readonly IValidator<UserRegistration> _validator;
+        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper,IAuditLog auditLog, IValidator<UserRegistration> validator) 
         {
             _loanRepository = loanRepository;
             _logger = logger;
@@ -29,12 +31,24 @@ namespace LoanManagementApi.Controllers
             _login = login;
             _auditRepository = auditLog;
             username = _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
+            _validator = validator;
+            
         }
         [AllowAnonymous]
         [HttpPost("UserRegistation")]
-        public ActionResult UserRegistation(UserRegistration usrRegis)
+        public async Task< ActionResult> UserRegistation(UserRegistration usrRegis)
         {
-            _logger.LogInformation("Creating User Registation");
+            var validationResult = await _validator.ValidateAsync(usrRegis);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return BadRequest(ModelState);
+            }
+                _logger.LogInformation("Creating User Registation");
             if (_loanRepository.ValidateUserRegistation(usrRegis))
             {
                 _logger.LogInformation("UserName or Email already registered");

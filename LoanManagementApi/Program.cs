@@ -1,4 +1,5 @@
-﻿using JWTAuthentication;
+﻿using FluentValidation;
+using JWTAuthentication;
 using LoanManagementApi;
 using LoanManagementApi.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,6 +24,7 @@ option.TokenValidationParameters = new TokenValidationParameters
 }
 
 );
+builder.Services.AddValidatorsFromAssemblyContaining<UserRegistrationValidator>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     // This converts enums to strings globally across the API and Swagger UI
