@@ -1,11 +1,12 @@
-using JWTAuthentication;
+﻿using JWTAuthentication;
 using LoanManagementApi;
 using LoanManagementApi.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -59,6 +60,7 @@ builder.Host.UseSerilog((hostingContext, loggerConfig) =>
 );
 var app = builder.Build();
 
+app.UseDirectoryBrowser();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
