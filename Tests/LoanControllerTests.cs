@@ -1,4 +1,5 @@
-﻿using LoanManagementApi.Controllers;
+﻿using FluentValidation;
+using LoanManagementApi.Controllers;
 using LoanManagementApi.Model;
 using LoanManagementApi.Repository;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace LoanManagementApi.Tests
@@ -24,6 +26,7 @@ namespace LoanManagementApi.Tests
         // System Under Test (SUT)
         private LoanController _controller;
         private IAuditLog _mockAuditLog;
+        private IValidator<UserRegistration> _mockValidator;
 
         [TestInitialize]
         public void Setup()
@@ -37,6 +40,7 @@ namespace LoanManagementApi.Tests
             var httpContext = new DefaultHttpContext();
             _mockHttpContextAccessor.HttpContext.Returns(httpContext);
             _mockAuditLog=Substitute.For<IAuditLog>();
+            _mockValidator = Substitute.For<IValidator<UserRegistration>>();
 
             // Construct the controller instance
             _controller = new LoanController(
@@ -45,21 +49,37 @@ namespace LoanManagementApi.Tests
                 _mockHttpContextAccessor,
                 _mockLogin,
                 _mockHelper,
-                _mockAuditLog
+                _mockAuditLog,
+                _mockValidator
             );
         }
 
         [TestMethod]
-        public void UserRegistation_ValidPayload_ReturnsOkResult()
+        public async Task UserRegistation_ValidPayload_ReturnsOkWithSavedEntity()
         {
             // Arrange
-            var userReg = new UserRegistration {UserName="amresh" };
+            var userReg = new UserRegistration { UserName = "amresh", Email = "test@test.com" };
+            var savedUser = new UserRegistration { Id = 1, UserName = "amresh", Email = "test@test.com" };
+
+            _mockValidator.ValidateAsync(userReg).Returns(Task.FromResult(new FluentValidation.Results.ValidationResult()));
+            _mockLoanRepository.ValidateUserRegistation(userReg).Returns(false);
+            _mockLoanRepository.UserRegistation(userReg).Returns(savedUser);
+
             // Act
-            var result = _controller.UserRegistation(userReg);
+            var result = await _controller.UserRegistation(userReg);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+
+            // Verify the mock repository and audit methods executed exactly once
+            Assert.AreEqual(savedUser, okResult.Value);
             _mockLoanRepository.Received(1).UserRegistation(userReg);
+            _mockAuditLog.Received(1).LogAction(
+                "New User",
+                "New User",
+                "User Registation created successfully for user: amresh"
+            );
         }
 
         [TestMethod]
