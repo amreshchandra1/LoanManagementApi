@@ -16,6 +16,7 @@ namespace LoanManagementApi.Repository
         }
         public UserRegistration UserRegistation(UserRegistration userRegistration)
         {
+            userRegistration.Roles = null;
             _context.UserRegistration.Add(userRegistration);
             int res = _context.SaveChanges();
             _context.Entry(userRegistration).Reference(u => u.Roles).Load();

@@ -58,7 +58,7 @@ namespace LoanManagementApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create User Registation");
             }
         }
-       // [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
         [HttpPost("CreateLoanApplication")]
         public ActionResult CreateLoanApplication(LoanApplication loanApplication)
         {
@@ -148,7 +148,7 @@ namespace LoanManagementApi.Controllers
 
             return Ok(emi);
         }
-      //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpGet("ViewLoanHistoryByUserName/{username}")]
         public ActionResult<IEnumerable<LoanApplication>> ViewLoanHistoryByUserName(string username)
         {

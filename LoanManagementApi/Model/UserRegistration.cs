@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace LoanManagementApi.Model
 {
@@ -37,6 +38,7 @@ namespace LoanManagementApi.Model
 
         [ForeignKey(nameof(RolesId))]
         [ValidateNever] // Prevents API model binding errors when payload doesn't send full role object
+        [JsonIgnore]
         public Roles Roles { get; set; } = null!;
     }
 }
