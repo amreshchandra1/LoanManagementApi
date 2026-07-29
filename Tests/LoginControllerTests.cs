@@ -67,7 +67,7 @@ namespace LoanManagementApi.Tests
             // Assert
             Assert.IsInstanceOfType(result, typeof(UnauthorizedObjectResult));
 
-            var unauthorizedResult = result as UnauthorizedObjectResult;
+            var unauthorizedResult = result;
             Assert.IsNotNull(unauthorizedResult);
             Assert.AreEqual(401, unauthorizedResult.StatusCode);
             Assert.AreEqual("Invalid credentials", unauthorizedResult.Value);
