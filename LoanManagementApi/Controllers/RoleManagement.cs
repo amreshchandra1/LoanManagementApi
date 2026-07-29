@@ -20,9 +20,14 @@ namespace LoanManagementApi.Controllers
         [HttpGet("AddRole")]
         public IActionResult AddRole(string roleName)
         {
-            _roleManagementRepository.AddRole(roleName);
-            _logger.LogInformation("Role {RoleName} added successfully", roleName);
-            return Ok($"Role {roleName} added successfully");
+            int result=_roleManagementRepository.AddRole(roleName);
+            if (result > 0)
+            {
+                _logger.LogInformation($"Role {roleName} added successfully", roleName);
+                return Ok($"Role {roleName} added successfully");
+            }
+            return BadRequest("No Record Updated");
+            
         } 
     }
 }

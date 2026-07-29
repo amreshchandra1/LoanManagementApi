@@ -4,15 +4,24 @@ namespace LoanManagementApi.Repository
 {
     public class RoleManagement : IRoleManagement
     {
+        private readonly ILogger<RoleManagement> _logger;
         private readonly EFContext _context;
-        public RoleManagement(EFContext context)
+        public RoleManagement( EFContext context, ILogger<RoleManagement> logger)
         {
             _context = context;
+            _logger = logger;
         }
-        public void AddRole(string roleName)
+        public int AddRole(string roleName)
         {
+            int result = 0;
+            if(_context.Roles.Any(x=>x.RoleName==roleName))
+            {
+                _logger.LogError($"{roleName} is already exist");
+                return result;
+            }
             _context.Add(new Roles { RoleName = roleName });
-            _context.SaveChanges();
+            result =  _context.SaveChanges();
+            return result;
         }
     }
 }

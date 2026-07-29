@@ -2,6 +2,6 @@
 {
     public interface IRoleManagement
     {
-        public void AddRole(string roleName);
+        public int AddRole(string roleName);
     }
 }

@@ -148,7 +148,7 @@ namespace LoanManagementApi.Controllers
 
             return Ok(emi);
         }
-        [Authorize(Roles = "Admin,Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
         [HttpGet("ViewLoanHistoryByUserName/{username}")]
         public ActionResult<IEnumerable<LoanApplication>> ViewLoanHistoryByUserName(string username)
         {
