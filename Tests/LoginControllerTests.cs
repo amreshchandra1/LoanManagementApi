@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using LoanManagementApi.Controllers;
 using LoanManagementApi.Repository;
+using LoanManagementApi.Model;
 
 namespace LoanManagementApi.Tests
 {
@@ -33,13 +34,14 @@ namespace LoanManagementApi.Tests
             // Arrange
             string username = "valid_user";
             string password = "SecurePassword123";
+            LoginRequest loginRequest = new LoginRequest { Username = username, Password = password };
             //  var expectedResult = new OkObjectResult(new { token = "mocked_jwt_token_here" });
             var expectedResult = "mocked_jwt_token_here";
             // Setup the mock to return an Ok result when these specific credentials match
             _mockLoginRepository.GenerateToken(username, password).Returns(expectedResult);
 
             // Act
-            var result = _controller.SignIn(username, password);
+            var result = _controller.SignIn(loginRequest);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
@@ -57,13 +59,14 @@ namespace LoanManagementApi.Tests
             // Arrange
             string username = "wrong_user";
             string password = "WrongPassword";
+            LoginRequest loginRequest = new LoginRequest { Username = username, Password = password };
             var expectedResult = new UnauthorizedObjectResult("Invalid credentials");
 
             // Setup the mock to return an Unauthorized result for bad credentials
             _mockLoginRepository.GenerateToken(username, password).Returns("UnAuthorize");
 
             // Act
-            var result = _controller.SignIn(username, password);
+            var result = _controller.SignIn(loginRequest);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(UnauthorizedObjectResult));

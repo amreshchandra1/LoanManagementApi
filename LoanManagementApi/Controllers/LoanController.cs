@@ -95,7 +95,7 @@ namespace LoanManagementApi.Controllers
             }
            
         }
-        [HttpGet("LoanStatusTracking/{loanid}")]
+        [HttpGet("GetLoanStatusTracking/{loanid}")]
         public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTracking(Guid loanid)
         {
             _logger.LogInformation($"Geting LoanStatus");

@@ -19,7 +19,6 @@ option.TokenValidationParameters = new TokenValidationParameters
     ValidAudience = "myclientapp",
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("AmreshChadraSecretKeyJWTAmreshChadraSecretKeyJWT")),
     ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 }
-
 }
 
 );
@@ -36,6 +35,7 @@ builder.Services.AddScoped<ILoan, Loan>();
 builder.Services.AddScoped<ILogin, Login>();
 builder.Services.AddScoped<IHelper, Helper>();
 builder.Services.AddScoped<IAuditLog, AuditLogRepository>();
+builder.Services.AddScoped<IRoleManagement, RoleManagement>();
 var connectionString = builder.Configuration.GetConnectionString("SQLConnection");
 
 builder.Services.AddDbContext<EFContext>(

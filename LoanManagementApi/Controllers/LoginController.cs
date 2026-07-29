@@ -1,4 +1,5 @@
-﻿using LoanManagementApi.Repository;
+﻿using LoanManagementApi.Model;
+using LoanManagementApi.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -20,9 +21,9 @@ namespace LoanManagementApi.Controllers
         }
         [AllowAnonymous]
         [HttpPost("GenerateToken")]
-        public ActionResult SignIn(string usrname, string password)
+        public ActionResult SignIn(LoginRequest loginRequest)
         {
-            var token= _loginRepository.GenerateToken(usrname, password);
+            var token= _loginRepository.GenerateToken(loginRequest.Username, loginRequest.Password);
             if(token== "UnAuthorize")
             {
                 return Unauthorized("Invalid credentials");
