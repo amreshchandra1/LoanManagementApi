@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.Net;
 
 namespace LoanManagementApi.Controllers
@@ -18,7 +19,7 @@ namespace LoanManagementApi.Controllers
         private readonly IHelper _helper;
         private readonly IAuditLog _auditRepository;
         private readonly ILogin _login;
-       
+        private readonly string username;
         public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper,IAuditLog auditLog) 
         {
             _loanRepository = loanRepository;
@@ -27,15 +28,21 @@ namespace LoanManagementApi.Controllers
             _helper = helper;
             _login = login;
             _auditRepository = auditLog;
+            username = _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
         }
         [HttpPost("UserRegistation")]
         public ActionResult UserRegistation(UserRegistration usrRegis)
         {
             _logger.LogInformation("Creating User Registation");
            var res= _loanRepository.UserRegistation(usrRegis);
-            if(res>0)
+            if(res!=null)
             {
                 _logger.LogInformation("User Registation created successfully for user: {UserName}", usrRegis.UserName);
+                _auditRepository.LogAction(
+                  "New User",
+                  "New User",
+                  $"User Registation created successfully for user: {usrRegis.UserName}"
+                  );
                 return Ok(res);
             }
             else
@@ -49,12 +56,16 @@ namespace LoanManagementApi.Controllers
         public ActionResult CreateLoanApplication(LoanApplication loanApplication)
         {
             _logger.LogInformation("Creating loan application for customer: {CustomerId}", loanApplication.CustomerId);
-
-             loanApplication.UserRegistrationUserName = _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
-              var res= _loanRepository.CreateLoanApplication(loanApplication);
-             if(res>0)
+            loanApplication.UserRegistrationUserName = username;
+            var res= _loanRepository.CreateLoanApplication(loanApplication);
+             if(res!=null)
              {
                 _logger.LogInformation("Loan application created successfully for customer: {CustomerId}", loanApplication.CustomerId);
+                _auditRepository.LogAction(
+                   string.IsNullOrEmpty(username) ? "user not login" : username,
+                   "CreateLoanApplication",
+                   $"Loan application created successfully for user {username}"
+                   );
                 return Ok(res);
              }
              else
@@ -69,8 +80,13 @@ namespace LoanManagementApi.Controllers
             int res= _loanRepository.UpdateLoanStatus(id, ls);
             if(res>0)
             {
-                _logger.LogInformation("Loan status updated successfully for loan application Id: {id}", id);
-                return Ok($"Loan status updated successfully for loan application Id: {id}");
+                _logger.LogInformation($"Loan status updated successfully for loan application Id: {id} with status {ls}");
+                _auditRepository.LogAction(
+                  string.IsNullOrEmpty(username) ? "user not login" : username,
+                  "CreateLoanApplication",
+                  $"Loan application created successfully for user {username}"
+                  );
+                return Ok($"Loan status updated successfully for loan application Id: {id} with status {ls}");
             }
             else
             {
@@ -83,6 +99,11 @@ namespace LoanManagementApi.Controllers
         public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTracking(Guid loanid)
         {
             _logger.LogInformation($"Geting LoanStatus");
+            _auditRepository.LogAction(
+                  string.IsNullOrEmpty(username) ? "user not login" : username,
+                  "GetLoanStatusTracking",
+                  $"Geting Loan Status Tracking for loan  id {loanid}"
+                  );
             return _loanRepository.GetLoanStatusTrackings(loanid).ToList();
         }
         //  [Authorize(Roles = "Admin")]
@@ -93,7 +114,6 @@ namespace LoanManagementApi.Controllers
             int result= _loanRepository.ApproveReject(id,ls);
             if (result > 0)
             {
-                var username= _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
                 _auditRepository.LogAction(
                  string.IsNullOrEmpty(username)? "user not login": username,
                  "ApproveReject",
@@ -118,14 +138,18 @@ namespace LoanManagementApi.Controllers
 
             return Ok(emi);
         }
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         [HttpGet("ViewLoanHistoryByUserName/{username}")]
         public ActionResult<IEnumerable<LoanApplication>> ViewLoanHistoryByUserName(string username)
         {
             _logger.LogInformation("Fetching loan history records for username: {Username}", username);
 
             var history = _loanRepository.ViewLoanHistoryByUserName(username).ToList();
-
+            _auditRepository.LogAction(
+                 string.IsNullOrEmpty(username) ? "user not login" : username,
+                 "ViewLoanHistoryByUserName",
+                 $"Geting Loan History for username {username}"
+                 );
             if (!history.Any())
             {
                 _logger.LogWarning("No loan history records found matching username: {Username}", username);

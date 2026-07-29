@@ -73,7 +73,7 @@ namespace LoanManagementApi.Tests
             // Mocking HttpContext headers access
             _mockHttpContextAccessor.HttpContext.Request.Headers["Authorization"] = dummyToken;
             _mockLogin.ReadJWT(dummyToken).Returns(extractedUser);
-            _mockLoanRepository.CreateLoanApplication(loanApp).Returns(1); // Greater than 0 means success
+            _mockLoanRepository.CreateLoanApplication(loanApp).Returns(new LoanApplication() { }); // Greater than 0 means success
 
             // Act
             var result = _controller.CreateLoanApplication(loanApp);

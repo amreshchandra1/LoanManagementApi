@@ -17,29 +17,29 @@ namespace LoanManagementApi
             exception,
             "An unhandled execution failure occurred: {Message}",
             exception.Message);
-            var (statusCode, title) = exception switch
-            {
-                UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized Access"),
-                KeyNotFoundException => (StatusCodes.Status404NotFound, "Resource Not Found"),
-                InvalidOperationException => (StatusCodes.Status400BadRequest, "Invalid State/Operation Request"),
-                _ => (StatusCodes.Status500InternalServerError, "Server Error Encountered")
-            };
+            //var (statusCode, title) = exception switch
+            //{
+            //    UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized Access"),
+            //    KeyNotFoundException => (StatusCodes.Status404NotFound, "Resource Not Found"),
+            //    InvalidOperationException => (StatusCodes.Status400BadRequest, "Invalid State/Operation Request"),
+            //    _ => (StatusCodes.Status500InternalServerError, "Server Error Encountered")
+            //};
 
-            // 3. Build a production-ready RFC 7807 Problem Details object
-            var problemDetails = new ProblemDetails
-            {
-                Status = statusCode,
-                Title = title,
-                Detail = exception.Message,
-                Instance = httpContext.Request.Path
-            };
+            //// 3. Build a production-ready RFC 7807 Problem Details object
+            //var problemDetails = new ProblemDetails
+            //{
+            //    Status = statusCode,
+            //    Title = title,
+            //    Detail = exception.Message,
+            //    Instance = httpContext.Request.Path
+            //};
 
-            // 4. Trace identifiers help developers link UI errors directly to server-side logs
-            problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
+            //// 4. Trace identifiers help developers link UI errors directly to server-side logs
+            //problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
 
-            // 5. Commit payload directly to output stream
-            httpContext.Response.StatusCode = statusCode;
-            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            //// 5. Commit payload directly to output stream
+            //httpContext.Response.StatusCode = statusCode;
+            //await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
             // Return true to indicate that this exception has been successfully handled
             return true;

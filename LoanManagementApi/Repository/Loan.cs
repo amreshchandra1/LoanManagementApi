@@ -14,19 +14,19 @@ namespace LoanManagementApi.Repository
         {
             _context = context;
         }
-        public int UserRegistation(UserRegistration userRegistration)
+        public UserRegistration UserRegistation(UserRegistration userRegistration)
         {
             _context.UserRegistration.Add(userRegistration);
             int res = _context.SaveChanges();
-            return res;
+            _context.Entry(userRegistration).Reference(u => u.Roles).Load();
+            return userRegistration;
         }
-        public int CreateLoanApplication(LoanApplication loanApplication)
+        public LoanApplication CreateLoanApplication(LoanApplication loanApplication)
         {
             loanApplication.CalculatedEmi = CalculateEmi(Convert.ToDouble(loanApplication.PrincipalAmount), loanApplication.AnnualInterestRate, loanApplication.TermInMonths);
             _context.LoanApplications.Add(loanApplication);
             var res = _context.SaveChanges();
-            return res;
-
+            return loanApplication;
         }
         public int ApproveReject(Guid id,LoanStatus ls)
         {

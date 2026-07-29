@@ -22,13 +22,13 @@ namespace LoanManagementApi.Repository
             _config = config;
         }
 
-        public ActionResult GenerateToken(string usrname, string password)
+        public string GenerateToken(string usrname, string password)
         {
             var user = _context.UserRegistration.Include(x => x.Roles).Where(x => x.UserName == usrname && x.Password==password).FirstOrDefault();
 
             if (user == null)
             {
-                return Unauthorized();
+                return "UnAuthorize";
             }
             
             var key = _config["SecretKey"] ?? string.Empty;
@@ -47,7 +47,7 @@ namespace LoanManagementApi.Repository
                 signingCredentials: new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256)
             );
             var token = new JwtSecurityTokenHandler().WriteToken(tokendata);
-            return Ok(token);
+            return token;
         }
         public string ReadJWT(string jwt)
         {
