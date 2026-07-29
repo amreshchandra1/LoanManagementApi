@@ -30,6 +30,7 @@ namespace LoanManagementApi.Controllers
             _auditRepository = auditLog;
             username = _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
         }
+        [AllowAnonymous]
         [HttpPost("UserRegistation")]
         public ActionResult UserRegistation(UserRegistration usrRegis)
         {
@@ -51,7 +52,7 @@ namespace LoanManagementApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create User Registation");
             }
         }
-       // [Authorize(Roles ="Admin")]
+       // [Authorize(Roles = "Customer")]
         [HttpPost("CreateLoanApplication")]
         public ActionResult CreateLoanApplication(LoanApplication loanApplication)
         {
@@ -74,6 +75,7 @@ namespace LoanManagementApi.Controllers
                 return BadRequest("Failed to create loan application");
             }
         }
+       // [Authorize(Roles ="Admin")]
         [HttpGet("UpdateLoanStatus/{id}/{ls}")]
         public ActionResult UpdateLoanStatus(Guid id, LoanStatus ls)
         {
@@ -95,6 +97,7 @@ namespace LoanManagementApi.Controllers
             }
            
         }
+        //[Authorize(Roles = "Admin,Customer")]
         [HttpGet("GetLoanStatusTracking/{loanid}")]
         public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTracking(Guid loanid)
         {
@@ -104,9 +107,10 @@ namespace LoanManagementApi.Controllers
                   "GetLoanStatusTracking",
                   $"Geting Loan Status Tracking for loan  id {loanid}"
                   );
-            return _loanRepository.GetLoanStatusTrackings(loanid).ToList();
+            var result = _loanRepository.GetLoanStatusTrackings(loanid).ToList();
+            return Ok(result);
         }
-        //  [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         [HttpPost("ApproveReject")]
         public ActionResult ApproveReject(Guid id, LoanStatus ls)
         {
@@ -161,7 +165,7 @@ namespace LoanManagementApi.Controllers
 
             return Ok(history);
         }
-       // [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         [HttpGet("LoanStatusTracking")]
         public ActionResult<IEnumerable<LoanStatusTracking>> LoanStatusTracking()
         {

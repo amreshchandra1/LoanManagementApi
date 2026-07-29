@@ -55,7 +55,7 @@ namespace LoanManagementApi.Repository
         public List<LoanStatusTracking> GetLoanStatusTrackings(Guid guid)
         {
             var p=
-            _context.LoanStatusTracking
+            _context.LoanStatusTracking.AsNoTracking()
             .Where(x => x.LoanApplicationId == guid)
               .Select(x => new LoanStatusTracking
               {
