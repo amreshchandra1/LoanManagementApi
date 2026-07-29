@@ -21,6 +21,12 @@ namespace LoanManagementApi.Repository
             _context.Entry(userRegistration).Reference(u => u.Roles).Load();
             return userRegistration;
         }
+        public bool ValidateUserRegistation(UserRegistration userRegistration)
+        {
+            var isExist = _context.UserRegistration.Any(x => x.Email == userRegistration.Email || x.UserName == userRegistration.UserName);
+            
+            return isExist;
+        }
         public LoanApplication CreateLoanApplication(LoanApplication loanApplication)
         {
             loanApplication.CalculatedEmi = CalculateEmi(Convert.ToDouble(loanApplication.PrincipalAmount), loanApplication.AnnualInterestRate, loanApplication.TermInMonths);

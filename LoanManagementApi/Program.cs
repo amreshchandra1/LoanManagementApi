@@ -60,11 +60,25 @@ builder.Host.UseSerilog((hostingContext, loggerConfig) =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
+else
+{
+    // TEMPORARY: Un-comment this line to force Azure to show the real error details
+    app.UseDeveloperExceptionPage();
+
+  //  app.UseHsts();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler();

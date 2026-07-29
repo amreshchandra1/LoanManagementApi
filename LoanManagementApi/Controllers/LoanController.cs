@@ -34,6 +34,10 @@ namespace LoanManagementApi.Controllers
         [HttpPost("UserRegistation")]
         public ActionResult UserRegistation(UserRegistration usrRegis)
         {
+              if (_loanRepository.ValidateUserRegistation(usrRegis))
+              {
+                return BadRequest("UserName or Email already registered");
+              }
             _logger.LogInformation("Creating User Registation");
            var res= _loanRepository.UserRegistation(usrRegis);
             if(res!=null)

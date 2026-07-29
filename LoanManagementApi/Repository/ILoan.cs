@@ -5,6 +5,7 @@ namespace LoanManagementApi.Repository
     public interface ILoan
     {
         public LoanApplication CreateLoanApplication(LoanApplication loanApplication);
+        public bool ValidateUserRegistation(UserRegistration userRegistration);
         public int ApproveReject(Guid id,LoanStatus ls);
         public UserRegistration UserRegistation(UserRegistration userRegistration);
         public decimal CalculateEmi(double principal, double annualInterestRate, int tenureInMonths);
