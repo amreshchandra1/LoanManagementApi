@@ -39,21 +39,17 @@ namespace LoanManagementApi.Controllers
         public async Task< ActionResult> UserRegistation(UserRegistration usrRegis)
         {
             var validationResult = await _validator.ValidateAsync(usrRegis);
-
+            List<string> errorlst = new List<string>();
             if (!validationResult.IsValid)
             {
                 foreach (var error in validationResult.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                   // ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    errorlst.Add(error.ErrorMessage);
                 }
-                return BadRequest(ModelState);
+               return BadRequest(new {errors=errorlst } );
             }
-                _logger.LogInformation("Creating User Registation");
-            if (_loanRepository.ValidateUserRegistation(usrRegis))
-            {
-                _logger.LogInformation("UserName or Email already registered");
-                return BadRequest("UserName or Email already registered");
-            }
+           
             _logger.LogInformation("Creating User Registation");
            var res= _loanRepository.UserRegistation(usrRegis);
             if(res!=null)

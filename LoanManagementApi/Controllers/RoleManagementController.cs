@@ -25,26 +25,17 @@ namespace LoanManagementApi.Controllers
         public async Task< IActionResult> AddRole(string roleName)
         {
             var validationResult = await _validator.ValidateAsync(new Roles() {RoleName=roleName });
-            //ValidationError error1 = new ValidationError();
-            //var errorResponse = new ValidationError
-            //{
-            //    Errors = validationResult.Errors
-            //.Select(x => x.ErrorMessage)
-            //.ToList()
-            //};
-
+            List<string> errorlst = new List<string>();
             if (!validationResult.IsValid)
             {
                 foreach (var error in validationResult.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                    
+                    //ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    errorlst.Add(error.ErrorMessage);
                 }
-                return BadRequest(new {errors= ModelState});
-              //  return BadRequest(errorResponse);
+                return BadRequest(new { errors = errorlst });
             }
         
-
             int result=_roleManagementRepository.AddRole(roleName);
             if (result > 0)
             {
