@@ -40,26 +40,32 @@ builder.Services.AddScoped<IHelper, Helper>();
 builder.Services.AddScoped<IAuditLog, AuditLogRepository>();
 builder.Services.AddScoped<IRoleManagement, RoleManagement>();
 var connectionString = builder.Configuration.GetConnectionString("SQLConnection");
-
+builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddDbContext<EFContext>(
     options => options.UseSqlServer(connectionString)
 );
 builder.Services.AddProblemDetails();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Host.UseSerilog((hostingContext, loggerConfig) =>
+//builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+bool enableSerilog = Convert.ToBoolean( builder.Configuration["EnableSrilog"]);
+if(enableSerilog)
 {
-    if (hostingContext.HostingEnvironment.IsDevelopment())//Added only for dev environment.By using this line serilog will only work for dev environment
+    builder.Host.UseSerilog((hostingContext, loggerConfig) =>
     {
-        loggerConfig.ReadFrom.Configuration(hostingContext.Configuration);
+        if (hostingContext.HostingEnvironment.IsDevelopment())//Added only for dev environment.By using this line serilog will only work for dev environment
+        {
+            loggerConfig.ReadFrom.Configuration(hostingContext.Configuration);
+        }
+        else
+        {
+            loggerConfig
+                        .MinimumLevel.Debug()
+                        .WriteTo.Console();
+        }
     }
-    else
-    {
-        loggerConfig
-                    .MinimumLevel.Debug()
-                    .WriteTo.Console();
-    }
+    );
 }
-);
+
+
 var app = builder.Build();
 
 app.UseDirectoryBrowser();
