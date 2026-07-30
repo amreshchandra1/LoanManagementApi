@@ -13,8 +13,8 @@
         DocumentsVerified = 3,
         CreditCheckCompleted = 4,
         UnderManagerApproval = 5,
-        DisbursementPending = 6,
-        Approved = 7,
-        Rejected = 8,
+        Approved = 6,
+        Rejected = 7,
+        DisbursementPending = 8,
     }
 }

@@ -15,31 +15,18 @@ namespace LoanManagementApi.Validation
         {
             _context = context;
             _helper = helper;
-            var lstStatus = Enum.GetNames<LoanStatus>().ToList();
+           // var lstStatus = Enum.GetNames<LoanStatus>().ToList();
             //Rule for status that status cant be updated to previous value
             RuleFor(x => x.Status)
-            
-             .Must( (model, incomingStatus) =>
+             .NotEmpty().WithMessage("Status cannot be empty.")
+             .Must(statusString =>
              {
-                 // 1. Fetch the CURRENT status of this loan from the database
-                 //var currentApplication =  _context.LoanApplications
-                 //    .AsNoTracking()
-                 //    .Where(l => l.Id == model.Id)
-                 //    .Select(l => new { l.Status })
-                 //    .FirstOrDefault();
-                 var currentApplication = new LoanApplication() { Status = "DocumentsUploaded" };
-                 // If the record doesn't exist yet, it's a new insertion; allow it
-                 if (currentApplication == null) return true;
-
-                 // 2. Cast enums to integers to compare their numeric positions
-                 int? currentStatusValue = _helper.TryGetLoanStatusIntValue(currentApplication.Status);
-                 int? incomingStatusValue = _helper.TryGetLoanStatusIntValue(incomingStatus);
-
-                 // 3. VALID LOGIC: Incoming must be greater than current status
-                 return incomingStatusValue > currentStatusValue;
+                 // 1. Attempt to parse the incoming string into our LoanStatus enum (ignoring case)
+                 // 2. Enum.TryParse natively ensures the value matches an explicitly named item
+                 return Enum.TryParse<LoanStatus>(statusString, true, out _);
              })
-             .WithMessage((model, incomingStatus) =>
-                 $"Cannot update status to '{incomingStatus}'. Moving backwards or re-submitting the same status is not allowed.");
+             .WithMessage((instance, statusString) =>
+                 $"The status '{statusString}' is invalid. Please provide a valid loan status option.");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace LoanManagementApi.Model
 
         [Required]
         [StringLength(20, ErrorMessage = "Status cannot exceed 20 characters.")]
-       // [RegularExpression("^(ApplicationSubmitted|DocumentsUploaded|DocumentsVerified|CreditCheckCompleted|UnderManagerApproval|DisbursementPending)$", ErrorMessage = "Status must be Pending, Approved, or Rejected.")]
+     //   [RegularExpression("^(ApplicationSubmitted|DocumentsUploaded|DocumentsVerified|CreditCheckCompleted|UnderManagerApproval|Approved|Rejected|DisbursementPending)$", ErrorMessage = "Status must be ApplicationSubmitted,DocumentsUploaded,DocumentsVerified,CreditCheckCompleted,UnderManagerApproval,Approved,Rejected,DisbursementPending.")]
         public string Status { get; set; } = "Pending";
 
         [Range(0, 10000000, ErrorMessage = "Calculated EMI must be a positive value.")]
