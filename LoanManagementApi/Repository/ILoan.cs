@@ -4,6 +4,7 @@ namespace LoanManagementApi.Repository
 {
     public interface ILoan
     {
+        public IEnumerable<UserRegistration> GetUserRegistation();
         public LoanApplication CreateLoanApplication(LoanApplication loanApplication);
         public bool ValidateUserRegistation(UserRegistration userRegistration);
         public int ApproveReject(Guid id,LoanStatus ls);

@@ -23,5 +23,9 @@ namespace LoanManagementApi.Repository
             result =  _context.SaveChanges();
             return result;
         }
+        public List<Roles> GetAllRoles()
+        {
+            return _context.Roles.ToList();
+        }
     }
 }

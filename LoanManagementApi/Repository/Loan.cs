@@ -14,6 +14,10 @@ namespace LoanManagementApi.Repository
         {
             _context = context;
         }
+        public IEnumerable< UserRegistration> GetUserRegistation()
+        {
+            return _context.UserRegistration.ToList();
+        }
         public UserRegistration UserRegistation(UserRegistration userRegistration)
         {
             userRegistration.Roles = null;
