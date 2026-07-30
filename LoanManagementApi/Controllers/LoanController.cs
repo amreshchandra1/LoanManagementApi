@@ -47,11 +47,12 @@ namespace LoanManagementApi.Controllers
                    // ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                     errorlst.Add(error.ErrorMessage);
                 }
-               return BadRequest(new {errors=errorlst } );
+                _logger.LogInformation($"Some of validation fail in UserRegistation");
+                return BadRequest(new {errors=errorlst } );
             }
            
             _logger.LogInformation("Creating User Registation");
-           var res= _loanRepository.UserRegistation(usrRegis);
+            var res= _loanRepository.UserRegistation(usrRegis);
             if(res!=null)
             {
                 _logger.LogInformation("User Registation created successfully for user: {UserName}", usrRegis.UserName);
@@ -95,6 +96,7 @@ namespace LoanManagementApi.Controllers
         [HttpGet("UpdateLoanStatus/{id}/{ls}")]
         public ActionResult UpdateLoanStatus(Guid id, LoanStatus ls)
         {
+            _logger.LogInformation($"Updating Loan Status for Loan Application {id}");
             int res= _loanRepository.UpdateLoanStatus(id, ls);
             if(res>0)
             {
@@ -118,12 +120,12 @@ namespace LoanManagementApi.Controllers
         public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTracking(Guid loanid)
         {
             _logger.LogInformation($"Geting LoanStatus");
+            var result = _loanRepository.GetLoanStatusTrackings(loanid).ToList();
             _auditRepository.LogAction(
                   string.IsNullOrEmpty(username) ? "user not login" : username,
                   "GetLoanStatusTracking",
                   $"Geting Loan Status Tracking for loan  id {loanid}"
                   );
-            var result = _loanRepository.GetLoanStatusTrackings(loanid).ToList();
             return Ok(result);
         }
       //  [Authorize(Roles = "Admin")]

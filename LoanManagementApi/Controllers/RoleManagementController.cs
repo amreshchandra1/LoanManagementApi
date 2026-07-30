@@ -33,6 +33,7 @@ namespace LoanManagementApi.Controllers
                     //ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                     errorlst.Add(error.ErrorMessage);
                 }
+                _logger.LogInformation($"Some of validation fail in AddRole");
                 return BadRequest(new { errors = errorlst });
             }
         
