@@ -2,11 +2,7 @@
 using LoanManagementApi.Model;
 using LoanManagementApi.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.Net;
 
 namespace LoanManagementApi.Controllers
 {
@@ -21,8 +17,9 @@ namespace LoanManagementApi.Controllers
         private readonly IAuditLog _auditRepository;
         private readonly ILogin _login;
         private readonly string username;
-        private readonly IValidator<UserRegistration> _validator;
-        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper,IAuditLog auditLog, IValidator<UserRegistration> validator) 
+        private readonly IValidator<UserRegistration> _validatorUserRegistration;
+        private readonly IValidator<LoanApplication> _validatorLoanApplication;
+        public LoanController(ILogger<Loan> logger, ILoan loanRepository, IHttpContextAccessor httpContextAccessor,ILogin login,IHelper helper,IAuditLog auditLog, IValidator<UserRegistration> validatorUserRegistration, IValidator<LoanApplication> validatorLoanApplication) 
         {
             _loanRepository = loanRepository;
             _logger = logger;
@@ -31,14 +28,15 @@ namespace LoanManagementApi.Controllers
             _login = login;
             _auditRepository = auditLog;
             username = _login.ReadJWT(_httpContextAccessor.HttpContext.Request.Headers.Authorization);
-            _validator = validator;
+            _validatorUserRegistration = validatorUserRegistration;
+            _validatorLoanApplication = validatorLoanApplication;
             
         }
         [AllowAnonymous]
         [HttpPost("UserRegistation")]
         public async Task< ActionResult> UserRegistation(UserRegistration usrRegis)
         {
-            var validationResult = await _validator.ValidateAsync(usrRegis);
+            var validationResult = await _validatorUserRegistration.ValidateAsync(usrRegis);
             List<string> errorlst = new List<string>();
             if (!validationResult.IsValid)
             {
@@ -96,6 +94,21 @@ namespace LoanManagementApi.Controllers
         [HttpGet("UpdateLoanStatus/{id}/{ls}")]
         public ActionResult UpdateLoanStatus(Guid id, LoanStatus ls)
         {
+            LoanApplication loanApp = new LoanApplication();
+            loanApp.Status = ls.ToString();
+            var validationResult =  _validatorLoanApplication.Validate(loanApp);
+            List<string> errorlst = new List<string>();
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    // ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    errorlst.Add(error.ErrorMessage);
+                }
+                _logger.LogInformation($"Some of validation fail in UserRegistation");
+                return BadRequest(new { errors = errorlst });
+            }
+
             _logger.LogInformation($"Updating Loan Status for Loan Application {id}");
             int res= _loanRepository.UpdateLoanStatus(id, ls);
             if(res>0)

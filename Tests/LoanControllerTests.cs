@@ -50,7 +50,7 @@ namespace LoanManagementApi.Tests
                 _mockLogin,
                 _mockHelper,
                 _mockAuditLog,
-                _mockValidator
+                _mockValidator,null
             );
         }
 

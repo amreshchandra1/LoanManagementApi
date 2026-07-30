@@ -1,4 +1,6 @@
-﻿namespace LoanManagementApi.Repository
+﻿using LoanManagementApi.Model;
+
+namespace LoanManagementApi.Repository
 {
     public class Helper:IHelper
     {
@@ -21,6 +23,15 @@
 
             // 5. Return the result rounded to standard currency decimal places
             return (decimal)Math.Round(emi, 2);
+        }
+        public int? TryGetLoanStatusIntValue(string statusString)
+        {
+            if (Enum.TryParse<LoanStatus>(statusString, true, out var result))
+            {
+                return (int)result;
+            }
+
+            return null; // Returns null if string doesn't match any enum item
         }
     }
 }
