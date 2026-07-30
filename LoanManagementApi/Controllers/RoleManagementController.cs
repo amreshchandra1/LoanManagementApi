@@ -24,7 +24,7 @@ namespace LoanManagementApi.Controllers
         [HttpGet("AddRole")]
         public async Task< IActionResult> AddRole(string roleName)
         {
-            var validationResult = await _validator.ValidateAsync(new Roles() {RoleName=roleName });
+            var validationResult = await _validator.ValidateAsync(new Roles() { RoleName = roleName });
             List<string> errorlst = new List<string>();
             if (!validationResult.IsValid)
             {
@@ -33,10 +33,10 @@ namespace LoanManagementApi.Controllers
                     //ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                     errorlst.Add(error.ErrorMessage);
                 }
-                _logger.LogInformation($"Some of validation fail in AddRole");
+                _logger.LogInformation($"Some of validation fail in AddRole : {string.Join(',', errorlst)}");
                 return BadRequest(new { errors = errorlst });
             }
-        
+
             int result=_roleManagementRepository.AddRole(roleName);
             if (result > 0)
             {

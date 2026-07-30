@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 public class UserRegistrationValidator : AbstractValidator<UserRegistration>
 {
     private readonly EFContext _context;
+    private readonly List<int> _allowedRoles;
     public UserRegistrationValidator(EFContext context)
     {
         _context = context;
+        _allowedRoles = _context.Roles.Select(x => x.Id).ToList();
 
         // Validation rule for Email
         RuleFor(user => user.Email)
@@ -33,5 +35,12 @@ public class UserRegistrationValidator : AbstractValidator<UserRegistration>
             })
             .WithMessage("This UserName address is already registered.");
 
+        RuleFor(role => role.RolesId)
+            .NotEmpty().WithMessage("Role Id cannot be empty.")
+            .Must(roleName => _allowedRoles.Contains(roleName))
+            .WithMessage((roleInstance, roleName) =>
+                $"The role '{roleName}' is not allowed. Allowed roles are: {string.Join(", ", _allowedRoles)}.");
+
     }
+
 }

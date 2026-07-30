@@ -32,7 +32,7 @@ namespace LoanManagementApi.Model
 
         // Foreign Key Relationship Setup
         [Required(ErrorMessage = "Role assignment is required.")]
-        [AllowedValues(1,2,3, ErrorMessage = "Role must be either 'Admin' or 'Loan Officer' or 'Customer'.Give 1 for Admin,2 for Loan Officer,3 for Customer")]
+       // [AllowedValues(1,2,3, ErrorMessage = "Role must be either 'Admin' or 'Loan Officer' or 'Customer'.Give 1 for Admin,2 for Loan Officer,3 for Customer")]
        
         public int RolesId { get; set; }
 

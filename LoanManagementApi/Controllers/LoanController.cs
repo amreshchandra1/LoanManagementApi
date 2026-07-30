@@ -116,8 +116,8 @@ namespace LoanManagementApi.Controllers
            
         }
         //[Authorize(Roles = "Admin,Customer")]
-        [HttpGet("GetLoanStatusTracking/{loanid}")]
-        public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTracking(Guid loanid)
+        [HttpGet("GetLoanStatusTrackingByLoanId/{loanid}")]
+        public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTrackingByLoanId(Guid loanid)
         {
             _logger.LogInformation($"Geting LoanStatus");
             var result = _loanRepository.GetLoanStatusTrackings(loanid).ToList();

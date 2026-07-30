@@ -14,11 +14,11 @@ namespace LoanManagementApi.Repository
         public int AddRole(string roleName)
         {
             int result = 0;
-            if(_context.Roles.Any(x=>x.RoleName==roleName))
-            {
-                _logger.LogError($"{roleName} is already exist");
-                return result;
-            }
+            //if(_context.Roles.Any(x=>x.RoleName==roleName))
+            //{
+            //    _logger.LogError($"{roleName} is already exist");
+            //    return result;
+            //}
             _context.Add(new Roles { RoleName = roleName });
             result =  _context.SaveChanges();
             return result;
