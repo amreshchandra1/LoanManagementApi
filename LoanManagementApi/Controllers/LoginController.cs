@@ -21,17 +21,23 @@ namespace LoanManagementApi.Controllers
         }
         [AllowAnonymous]
         [HttpPost("GenerateToken")]
+        [HttpPost("SignIn")]
         public ActionResult SignIn(LoginRequest loginRequest)
         {
             var token= _loginRepository.GenerateToken(loginRequest.Username, loginRequest.Password);
             if(token== "UnAuthorize")
             {
+                _auditRepository.LogAction(
+                 "",
+                 "SignIn",
+                 $"Login Fail for {loginRequest.Username}"
+                 );
                 return Unauthorized("Invalid credentials");
             }
             _auditRepository.LogAction(
                   "",
                   "SignIn",
-                  $"Generating JWT token"
+                  $"Login Sucessfull for {loginRequest.Username} and jwt token is generated"
                   );
             return Ok( token);
            // return _loginRepository.GenerateToken(usrname, password);

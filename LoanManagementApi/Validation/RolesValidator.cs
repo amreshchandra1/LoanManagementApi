@@ -11,6 +11,7 @@ namespace LoanManagementApi.Validation
         {
             _context = context;
             RuleFor(role => role.RoleName)
+                .NotEmpty().WithMessage("Role name cannot be empty.")
              .MustAsync(async (roleInstance, roleName, cancellationToken) =>
              {
                  var exists = await _context.Roles.AnyAsync(r =>

@@ -6,4 +6,11 @@ namespace LoanManagementApi.Model
     {
         public string InnerException { get; set; }
     }
+    public class ValidationError
+    {
+        public List<string> Errors
+        {
+            get; set;
+        }
+    }
 }

@@ -9,12 +9,12 @@ namespace LoanManagementApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleManagement : ControllerBase
+    public class RoleManagementController : ControllerBase
     {
-        private readonly ILogger<RoleManagement> _logger;
+        private readonly ILogger<RoleManagementController> _logger;
         private readonly IRoleManagement _roleManagementRepository;
         private readonly IValidator<Roles> _validator;
-        public RoleManagement(ILogger<RoleManagement> logger,IRoleManagement roleManagementRepository, IValidator<Roles> validator)
+        public RoleManagementController(ILogger<RoleManagementController> logger,IRoleManagement roleManagementRepository, IValidator<Roles> validator)
         {
             _logger = logger;
             _roleManagementRepository = roleManagementRepository;
@@ -25,15 +25,26 @@ namespace LoanManagementApi.Controllers
         public async Task< IActionResult> AddRole(string roleName)
         {
             var validationResult = await _validator.ValidateAsync(new Roles() {RoleName=roleName });
+            //ValidationError error1 = new ValidationError();
+            //var errorResponse = new ValidationError
+            //{
+            //    Errors = validationResult.Errors
+            //.Select(x => x.ErrorMessage)
+            //.ToList()
+            //};
 
             if (!validationResult.IsValid)
             {
                 foreach (var error in validationResult.Errors)
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    
                 }
-                return BadRequest(ModelState);
+                return BadRequest(new {errors= ModelState});
+              //  return BadRequest(errorResponse);
             }
+        
+
             int result=_roleManagementRepository.AddRole(roleName);
             if (result > 0)
             {
