@@ -68,7 +68,7 @@ namespace LoanManagementApi.Controllers
             }
         }
         
-        //[Authorize(Roles = "Admin,Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpPost("CreateLoanApplication")]
         public ActionResult CreateLoanApplication(LoanApplication loanApplication)
         {
@@ -91,7 +91,7 @@ namespace LoanManagementApi.Controllers
                 return BadRequest("Failed to create loan application");
             }
         }
-       // [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         [HttpGet("UpdateLoanStatus/{id}/{ls}")]
         public ActionResult UpdateLoanStatus(Guid id, LoanStatus ls)
         {
@@ -129,7 +129,7 @@ namespace LoanManagementApi.Controllers
             }
            
         }
-        //[Authorize(Roles = "Admin,Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpGet("GetLoanStatusTrackingByLoanId/{loanid}")]
         public ActionResult<IEnumerable<LoanStatusTracking>> GetLoanStatusTrackingByLoanId(Guid loanid)
         {
@@ -142,7 +142,7 @@ namespace LoanManagementApi.Controllers
                   );
             return Ok(result);
         }
-      //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost("ApproveReject")]
         public ActionResult ApproveReject(Guid id, LoanStatus ls)
         {
@@ -174,7 +174,7 @@ namespace LoanManagementApi.Controllers
 
             return Ok(emi);
         }
-        //[Authorize(Roles = "Admin,Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpGet("ViewLoanHistoryByUserName/{username}")]
         public ActionResult<IEnumerable<LoanApplication>> ViewLoanHistoryByUserName(string username)
         {
@@ -197,7 +197,7 @@ namespace LoanManagementApi.Controllers
 
             return Ok(history);
         }
-      //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("LoanStatusTracking")]
         public ActionResult<IEnumerable<LoanStatusTracking>> LoanStatusTracking()
         {

@@ -25,7 +25,6 @@ namespace JWTAuthentication
             {
                 return Unauthorized();
             }
-            //need
             var key = _config["SecretKey"]??string.Empty;
             //var key = "AmreshChadraSecretKeyJWTAmreshChadraSecretKeyJWT";
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

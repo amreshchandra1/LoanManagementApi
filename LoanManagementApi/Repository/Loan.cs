@@ -80,21 +80,7 @@ namespace LoanManagementApi.Repository
              .ToList();
             return p;
         }
-        public IActionResult Login(string usrname, string password)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Username == usrname && u.PasswordHash == password);
-            if (user != null)
-            {
-                return _generateToken.Token(usrname, usrname);
-
-            }
-            else
-            {
-                // Authentication failed
-                throw new UnauthorizedAccessException("Invalid username or password.");
-            }
-        }
-
+       
         public decimal CalculateEmi(double principal, double annualInterestRate, int tenureInMonths)
         {
             // 1. Calculate monthly interest rate (r) from annual rate
