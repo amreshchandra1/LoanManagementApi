@@ -21,5 +21,11 @@ namespace LoanManagementApi
             modelBuilder.Entity<LoanApplication>()
         .ToTable(tb => tb.HasTrigger("trr_LoanApplications"));
         }
+        public override int SaveChanges()
+        {
+            var modifiedEntries = ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+            return base.SaveChanges();
+        }
     }
 }

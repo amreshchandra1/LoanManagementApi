@@ -1,0 +1,725 @@
+{
+  "info": {
+    "_postman_id": "2f7c9d7c-7d94-4c8f-8d50-15f83d777487",
+    "name": "Loan",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4974846",
+    "_collection_link": "https://go.postman.co/collection/4974846-2f7c9d7c-7d94-4c8f-8d50-15f83d777487?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Azure",
+      "item": [
+        {
+          "name": "UserRegistation Copy",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userName\": \"testusername\",\r\n  \"name\": \"test\",\r\n  \"email\": \"test@test.com\",\r\n  \"password\": \"test1234\",\r\n  \"RolesName\":\"Admin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Loan/UserRegistation",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Loan",
+                "UserRegistation"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SignIn Copy",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"Username\": \"amresh\",\r\n  \"Password\":\"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Login/GenerateToken",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Login",
+                "GenerateToken"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CreateLoanApplication Copy",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_16z6}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"principalAmount\": 10000,\r\n  \"annualInterestRate\": 12,\r\n  \"termInMonths\": 12,\r\n  \"status\": \"ApplicationSubmitted\",\r\n  \"calculatedEmi\": 0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Loan/CreateLoanApplication",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Loan",
+                "CreateLoanApplication"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ApproveReject Copy",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Loan/ApproveReject?id=AA254554-CF72-49D0-B2AE-8F231A63C21E&ls=Approved",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Loan",
+                "ApproveReject"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "AA254554-CF72-49D0-B2AE-8F231A63C21E"
+                },
+                {
+                  "key": "ls",
+                  "value": "Approved"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ReadJWT Copy",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"customerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"principalAmount\": 0,\r\n  \"annualInterestRate\": 0,\r\n  \"termInMonths\": 0,\r\n  \"status\": \"string\",\r\n  \"calculatedEmi\": 0,\r\n  \"createdAt\": \"2026-07-27T10:44:07.060Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Login/ReadJWT",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Login",
+                "ReadJWT"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ViewLoanHistoryByUserName Copy",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"customerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"principalAmount\": 0,\r\n  \"annualInterestRate\": 0,\r\n  \"termInMonths\": 0,\r\n  \"status\": \"string\",\r\n  \"calculatedEmi\": 0,\r\n  \"createdAt\": \"2026-07-27T10:44:07.060Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Loan/ViewLoanHistoryByUserName/amresh",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Loan",
+                "ViewLoanHistoryByUserName",
+                "amresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateLoanStatus Copy",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Loan/UpdateLoanStatus/DA3DA74A-C515-4DA2-A56F-517721F3DAF1/DocumentsVerified",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Loan",
+                "UpdateLoanStatus",
+                "DA3DA74A-C515-4DA2-A56F-517721F3DAF1",
+                "DocumentsVerified"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetLoanStatusTrackingByLoanId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Loan/GetLoanStatusTrackingByLoanId/DA3DA74A-C515-4DA2-A56F-517721F3DAF1",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Loan",
+                "GetLoanStatusTrackingByLoanId",
+                "DA3DA74A-C515-4DA2-A56F-517721F3DAF1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetLoanStatusTracking Copy",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/Loan/GetLoanStatusTracking/DA3DA74A-C515-4DA2-A56F-517721F3DAF1",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "Loan",
+                "GetLoanStatusTracking",
+                "DA3DA74A-C515-4DA2-A56F-517721F3DAF1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AddRole Copy",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://loanmanagement-cneefjftcscwh3bf.centralindia-01.azurewebsites.net/api/RoleManagement/AddRole?roleName=Test",
+              "protocol": "https",
+              "host": [
+                "loanmanagement-cneefjftcscwh3bf",
+                "centralindia-01",
+                "azurewebsites",
+                "net"
+              ],
+              "path": [
+                "api",
+                "RoleManagement",
+                "AddRole"
+              ],
+              "query": [
+                {
+                  "key": "roleName",
+                  "value": "Test"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "UserRegistation",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"userName\": \"chandra\",\r\n  \"name\": \"chandra\",\r\n  \"email\": \"chandra@test.com\",\r\n  \"password\": \"Password@123\",\r\n  \"RoleName\":\"Admin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Loan/UserRegistation",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Loan",
+            "UserRegistation"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SignIn",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"Username\": \"chandra\",\r\n  \"Password\":\"Password@123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Login/GenerateToken",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Login",
+            "GenerateToken"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CreateLoanApplication",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_secret_16z6}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"principalAmount\": 10000,\r\n  \"annualInterestRate\": 12,\r\n  \"termInMonths\": 12,\r\n  \"status\": \"ApplicationSubmitted\",\r\n  \"calculatedEmi\": 0\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Loan/CreateLoanApplication",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Loan",
+            "CreateLoanApplication"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ApproveReject",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Loan/ApproveReject?id=7EEA4804-4B82-448D-B2A3-EDAF71717A14&ls=Approved",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Loan",
+            "ApproveReject"
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "7EEA4804-4B82-448D-B2A3-EDAF71717A14"
+            },
+            {
+              "key": "ls",
+              "value": "Approved"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ReadJWT",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"customerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"principalAmount\": 0,\r\n  \"annualInterestRate\": 0,\r\n  \"termInMonths\": 0,\r\n  \"status\": \"string\",\r\n  \"calculatedEmi\": 0,\r\n  \"createdAt\": \"2026-07-27T10:44:07.060Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Login/ReadJWT",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Login",
+            "ReadJWT"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ViewLoanHistoryByUserName",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"customerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"principalAmount\": 0,\r\n  \"annualInterestRate\": 0,\r\n  \"termInMonths\": 0,\r\n  \"status\": \"string\",\r\n  \"calculatedEmi\": 0,\r\n  \"createdAt\": \"2026-07-27T10:44:07.060Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Loan/ViewLoanHistoryByUserName/amresh",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Loan",
+            "ViewLoanHistoryByUserName",
+            "amresh"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UpdateLoanStatus",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Loan/UpdateLoanStatus/DA3DA74A-C515-4DA2-A56F-517721F3DAF1/ApplicationSubmitted",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Loan",
+            "UpdateLoanStatus",
+            "DA3DA74A-C515-4DA2-A56F-517721F3DAF1",
+            "ApplicationSubmitted"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetLoanStatusTrackingByLoanId",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/Loan/GetLoanStatusTrackingByLoanId/DA3DA74A-C515-4DA2-A56F-517721F3DAF1",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "Loan",
+            "GetLoanStatusTrackingByLoanId",
+            "DA3DA74A-C515-4DA2-A56F-517721F3DAF1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AddRole",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/RoleManagement/AddRole?roleName=Test",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "RoleManagement",
+            "AddRole"
+          ],
+          "query": [
+            {
+              "key": "roleName",
+              "value": "Test"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"userName\": \"testusername1111111\",\r\n  \"name\": \"testusername\",\r\n  \"email\": \"test1@test.com\",\r\n  \"password\": \"test1234\",\r\n  \"RolesId\":1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7010/api/UserRegistration",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7010",
+          "path": [
+            "api",
+            "UserRegistration"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "auth_secret_16z6",
+      "secret": true
+    }
+  ]
+}
