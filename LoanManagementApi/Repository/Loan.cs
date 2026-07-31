@@ -10,9 +10,11 @@ namespace LoanManagementApi.Repository
     {
         private readonly EFContext _context;
         private readonly IGenerateToken _generateToken;
-        public Loan(EFContext context) 
+        private readonly IHelper _helper;
+        public Loan(EFContext context,IHelper helper) 
         {
             _context = context;
+            _helper= helper;
         }
         public IEnumerable< UserRegistration> GetUserRegistation()
         {
@@ -20,7 +22,8 @@ namespace LoanManagementApi.Repository
         }
         public UserRegistration UserRegistation(UserRegistration userRegistration)
         {
-            userRegistration.Roles = null;
+            userRegistration.RolesId = _context.Roles.AsNoTracking().Where(x => x.RoleName == userRegistration.RoleName).Select(x=>x.Id).FirstOrDefault();
+            userRegistration.Password=_helper.EncryptPassword(userRegistration.Password);
             _context.UserRegistration.Add(userRegistration);
             int res = _context.SaveChanges();
             _context.Entry(userRegistration).Reference(u => u.Roles).Load();

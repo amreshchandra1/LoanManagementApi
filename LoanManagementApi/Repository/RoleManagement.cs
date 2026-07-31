@@ -1,4 +1,5 @@
 ﻿using LoanManagementApi.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace LoanManagementApi.Repository
 {
@@ -25,7 +26,7 @@ namespace LoanManagementApi.Repository
         }
         public List<Roles> GetAllRoles()
         {
-            return _context.Roles.ToList();
+            return _context.Roles.AsNoTracking().ToList();
         }
     }
 }

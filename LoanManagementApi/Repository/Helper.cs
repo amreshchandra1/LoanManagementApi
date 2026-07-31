@@ -33,5 +33,10 @@ namespace LoanManagementApi.Repository
 
             return null; // Returns null if string doesn't match any enum item
         }
+        public string EncryptPassword(string password)
+        {
+            string secureHashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+            return secureHashedPassword;
+        }
     }
 }

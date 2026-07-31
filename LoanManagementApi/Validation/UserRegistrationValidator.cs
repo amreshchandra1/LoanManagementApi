@@ -8,7 +8,7 @@ using System.Linq;
 public class UserRegistrationValidator : AbstractValidator<UserRegistration>
 {
     private readonly EFContext _context;
-    private readonly List<int> _allowedRoles;
+    private readonly List<string> _allowedRoles;
     private readonly List<string> _existingEmail;
     private readonly List<string> _existingUserName;
     private readonly IRoleManagement _roleManagement;
@@ -19,7 +19,7 @@ public class UserRegistrationValidator : AbstractValidator<UserRegistration>
         _roleManagement = roleManagement;
         _loan = loan;
 
-        _allowedRoles = _roleManagement.GetAllRoles().Select(x => x.Id).ToList();
+        _allowedRoles = _roleManagement.GetAllRoles().Select(x => x.RoleName).ToList();
         _existingEmail= _loan.GetUserRegistation().Select(x => x.Email).ToList();
         _existingUserName=_context.UserRegistration.Select(x => x.UserName).ToList();
 
@@ -32,12 +32,17 @@ public class UserRegistrationValidator : AbstractValidator<UserRegistration>
             .Must(username => !_existingUserName.Contains(username))
             .WithMessage("This UserName address is already registered.");
 
-        RuleFor(role => role.RolesId)
-            .NotEmpty().WithMessage("Role Id cannot be empty.")
-            .Must(roleName => _allowedRoles.Contains(roleName))
-            .WithMessage((roleInstance, roleName) =>
-                $"The role '{roleName}' is not allowed. Allowed roles are: {string.Join(", ", _allowedRoles)}.");
-
-    }
+        RuleFor(x => x.RoleName)
+            .NotEmpty().WithMessage("Role name cannot be empty.")
+            .Must(role => _allowedRoles.Contains(role))
+            .WithMessage((instance, role) =>
+                $"The role '{role}' is not allowed. Role must be either {string.Join(',', _allowedRoles)}");
+        //RuleFor(role => role.RolesId)
+        //   // .NotEmpty().WithMessage("Role Id cannot be empty.")
+        //    .Must(roleName => _allowedRoles.Contains(roleName))
+        //    .WithMessage((roleInstance, roleName) =>
+        //        $"The role '{roleName}' is not allowed. Allowed roles are: {string.Join(", ", _allowedRoles)}.");
+        
+}
 
 }

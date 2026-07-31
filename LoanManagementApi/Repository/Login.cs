@@ -24,12 +24,19 @@ namespace LoanManagementApi.Repository
 
         public string GenerateToken(string usrname, string password)
         {
-            var user = _context.UserRegistration.Include(x => x.Roles).Where(x => x.UserName == usrname && x.Password==password).FirstOrDefault();
-
+            var user =  _context.UserRegistration.Include(x => x.Roles).Where(x => x.UserName == usrname).FirstOrDefault();
             if (user == null)
             {
                 return "UnAuthorize";
             }
+
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user?.Password);
+            if (user == null || !isPasswordValid)
+            {
+                return "UnAuthorize";
+            }
+          
+           // var user = _context.UserRegistration.Include(x => x.Roles).Where(x => x.UserName == usrname && x.Password==_helper.EncryptPassword( password)).FirstOrDefault();
             
             var key = _config["SecretKey"] ?? string.Empty;
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
