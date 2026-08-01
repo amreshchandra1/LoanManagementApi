@@ -36,6 +36,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGenerateToken, GenerateToken>();
+builder.Services.AddScoped<IUser, User>();
 builder.Services.AddScoped<ILoan, Loan>();
 builder.Services.AddScoped<ILogin, Login>();
 builder.Services.AddScoped<IHelper, Helper>();

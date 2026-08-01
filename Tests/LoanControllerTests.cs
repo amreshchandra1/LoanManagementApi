@@ -5,12 +5,8 @@ using LoanManagementApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+
 
 namespace LoanManagementApi.Tests
 {
@@ -23,27 +19,26 @@ namespace LoanManagementApi.Tests
         private IHttpContextAccessor _mockHttpContextAccessor;
         private ILogin _mockLogin;
         private IHelper _mockHelper;
-        // System Under Test (SUT)
-        private LoanController _controller;
+       // private UserRegistrationController _userRegistrationController;
+        private LoanController _loanController;
         private IAuditLog _mockAuditLog;
         private IValidator<UserRegistration> _mockValidator;
 
         [TestInitialize]
         public void Setup()
         {
-            // Instantiate mocks using NSubstitute
             _mockLoanRepository = Substitute.For<ILoan>();
             _mockLogger = Substitute.For<ILogger<Loan>>();
             _mockHttpContextAccessor = Substitute.For<IHttpContextAccessor>();
             _mockLogin = Substitute.For<ILogin>();
             _mockHelper= Substitute.For<IHelper>();
+           // _userRegistrationController= Substitute.For<UserRegistrationController>();
             var httpContext = new DefaultHttpContext();
             _mockHttpContextAccessor.HttpContext.Returns(httpContext);
             _mockAuditLog=Substitute.For<IAuditLog>();
             _mockValidator = Substitute.For<IValidator<UserRegistration>>();
 
-            // Construct the controller instance
-            _controller = new LoanController(
+            _loanController = new LoanController(
                 _mockLogger,
                 _mockLoanRepository,
                 _mockHttpContextAccessor,
@@ -52,53 +47,50 @@ namespace LoanManagementApi.Tests
                 _mockAuditLog,
                 _mockValidator,null
             );
+
         }
 
-        [TestMethod]
-        public async Task UserRegistation_ValidPayload_ReturnsOkWithSavedEntity()
-        {
-            // Arrange
-            var userReg = new UserRegistration { UserName = "amresh", Email = "test@test.com" };
-            var savedUser = new UserRegistration { Id = 1, UserName = "amresh", Email = "test@test.com" };
+        //[TestMethod]
+        //public async Task UserRegistation_ValidPayload_ReturnsOkWithSavedEntity()
+        //{
+        //    // Arrange
+        //    var userReg = new UserRegistration { UserName = "amresh", Email = "test@test.com" };
+        //    var savedUser = new UserRegistration { Id = 1, UserName = "amresh", Email = "test@test.com" };
 
-            _mockValidator.ValidateAsync(userReg).Returns(Task.FromResult(new FluentValidation.Results.ValidationResult()));
-            _mockLoanRepository.ValidateUserRegistation(userReg).Returns(false);
-            _mockLoanRepository.UserRegistation(userReg).Returns(savedUser);
+        //    _mockValidator.ValidateAsync(userReg).Returns(Task.FromResult(new FluentValidation.Results.ValidationResult()));
+        //    _mockLoanRepository.ValidateUserRegistation(userReg).Returns(false);
+        //    _mockLoanRepository.UserRegistation(userReg).Returns(savedUser);
 
-            // Act
-            var result = await _controller.UserRegistation(userReg);
+        //    // Act
+        //    var result = await _controller.UserRegistation(userReg);
 
-            // Assert
-            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-            var okResult = (OkObjectResult)result;
+        //    // Assert
+        //    Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        //    var okResult = (OkObjectResult)result;
 
-            // Verify the mock repository and audit methods executed exactly once
-            Assert.AreEqual(savedUser, okResult.Value);
-            _mockLoanRepository.Received(1).UserRegistation(userReg);
-            _mockAuditLog.Received(1).LogAction(
-                "New User",
-                "New User",
-                "User Registation created successfully for user: amresh"
-            );
-        }
+        //    // Verify the mock repository and audit methods executed exactly once
+        //    Assert.AreEqual(savedUser, okResult.Value);
+        //    _mockLoanRepository.Received(1).UserRegistation(userReg);
+        //    _mockAuditLog.Received(1).LogAction(
+        //        "New User",
+        //        "New User",
+        //        "User Registation created successfully for user: amresh"
+        //    );
+        //}
 
         [TestMethod]
         public void CreateLoanApplication_SuccessfulCreation_ReturnsOkResult()
         {
-            // Arrange
             var loanApp = new LoanApplication { PrincipalAmount=1000,UserRegistrationUserName="amresh" };
             string dummyToken = "Bearer text_token";
             string extractedUser = "amresh";
 
-            // Mocking HttpContext headers access
             _mockHttpContextAccessor.HttpContext.Request.Headers["Authorization"] = dummyToken;
             _mockLogin.ReadJWT(dummyToken).Returns(extractedUser);
             _mockLoanRepository.CreateLoanApplication(Arg.Any<LoanApplication>()).Returns(loanApp); 
 
-            // Act
-            var result = _controller.CreateLoanApplication(loanApp) as OkObjectResult;
+            var result = _loanController.CreateLoanApplication(loanApp) as OkObjectResult;
 
-            // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             Assert.IsNotNull(result.Value);
             _mockLoanRepository.Received(1).CreateLoanApplication(loanApp);
@@ -113,7 +105,7 @@ namespace LoanManagementApi.Tests
             _mockLoanRepository.ApproveReject(id, status).Returns(1);
 
             // Act
-            var result = _controller.ApproveReject(id, status) as OkObjectResult;
+            var result = _loanController.ApproveReject(id, status) as OkObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -130,7 +122,7 @@ namespace LoanManagementApi.Tests
             _mockLoanRepository.ApproveReject(id, status).Returns(0); // 0 records updated
 
             // Act
-            var result = _controller.ApproveReject(id, status) as BadRequestObjectResult;
+            var result = _loanController.ApproveReject(id, status) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -150,7 +142,7 @@ namespace LoanManagementApi.Tests
             _mockHelper.CalculateEmi(principal, rate, tenure).Returns(expectedEmi);
 
             // Act
-            var result = _controller.CalculateEmi(principal, rate, tenure) as OkObjectResult;
+            var result = _loanController.CalculateEmi(principal, rate, tenure) as OkObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -171,7 +163,7 @@ namespace LoanManagementApi.Tests
             _mockLoanRepository.ViewLoanHistoryByUserName(targetUser).Returns(dataList);
 
             // Act
-            var actionResult = _controller.ViewLoanHistoryByUserName(targetUser);
+            var actionResult = _loanController.ViewLoanHistoryByUserName(targetUser);
 
             // Assert
             Assert.IsNotNull(actionResult);

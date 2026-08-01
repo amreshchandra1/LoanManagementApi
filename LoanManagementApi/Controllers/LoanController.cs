@@ -32,41 +32,41 @@ namespace LoanManagementApi.Controllers
             _validatorLoanApplication = validatorLoanApplication;
             
         }
-        [AllowAnonymous]
-        [HttpPost("UserRegistation")]
-        public async Task< ActionResult> UserRegistation(UserRegistration usrRegis)
-        {
-            var validationResult = await _validatorUserRegistration.ValidateAsync(usrRegis);
-            List<string> errorlst = new List<string>();
-            if (!validationResult.IsValid)
-            {
-                foreach (var error in validationResult.Errors)
-                {
-                   // ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                    errorlst.Add(error.ErrorMessage);
-                }
-                _logger.LogInformation($"Some of validation fail in UserRegistation");
-                return BadRequest(new {errors=errorlst } );
-            }
+        //[AllowAnonymous]
+        //[HttpPost("UserRegistation")]
+        //public async Task< ActionResult> UserRegistation(UserRegistration usrRegis)
+        //{
+        //    var validationResult = await _validatorUserRegistration.ValidateAsync(usrRegis);
+        //    List<string> errorlst = new List<string>();
+        //    if (!validationResult.IsValid)
+        //    {
+        //        foreach (var error in validationResult.Errors)
+        //        {
+        //           // ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        //            errorlst.Add(error.ErrorMessage);
+        //        }
+        //        _logger.LogInformation($"Some of validation fail in UserRegistation");
+        //        return BadRequest(new {errors=errorlst } );
+        //    }
            
-            _logger.LogInformation("Creating User Registation");
-            var res= _loanRepository.UserRegistation(usrRegis);
-            if(res!=null)
-            {
-                _logger.LogInformation("User Registation created successfully for user: {UserName}", usrRegis.UserName);
-                _auditRepository.LogAction(
-                  "New User",
-                  "New User",
-                  $"User Registation created successfully for user: {usrRegis.UserName}"
-                  );
-                return Ok(res);
-            }
-            else
-            {
-                _logger.LogError("Failed to create User Registation for user: {UserName}", usrRegis.UserName);
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create User Registation");
-            }
-        }
+        //    _logger.LogInformation("Creating User Registation");
+        //    var res= _loanRepository.UserRegistation(usrRegis);
+        //    if(res!=null)
+        //    {
+        //        _logger.LogInformation("User Registation created successfully for user: {UserName}", usrRegis.UserName);
+        //        _auditRepository.LogAction(
+        //          "New User",
+        //          "New User",
+        //          $"User Registation created successfully for user: {usrRegis.UserName}"
+        //          );
+        //        return Ok(res);
+        //    }
+        //    else
+        //    {
+        //        _logger.LogError("Failed to create User Registation for user: {UserName}", usrRegis.UserName);
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create User Registation");
+        //    }
+        //}
         
         [Authorize(Roles = "Admin,Customer")]
         [HttpPost("CreateLoanApplication")]

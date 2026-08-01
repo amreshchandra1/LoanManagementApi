@@ -13,19 +13,18 @@ namespace LoanManagementApi.Controllers
     {
         private readonly ILogger<UserRegistrationController> _logger;
         private readonly IValidator<UserRegistration> _validatorUserRegistration;
-        private readonly ILoan _loanRepository;
+        private readonly IUser _userRepository;
         private readonly IAuditLog _auditRepository;
-        public UserRegistrationController(ILogger<UserRegistrationController> logger, IValidator<UserRegistration> validatorUserRegistration,ILoan loanRepository, IAuditLog auditRepository)
+        public UserRegistrationController(ILogger<UserRegistrationController> logger, IValidator<UserRegistration> validatorUserRegistration,IUser userRepository, IAuditLog auditRepository)
         {
             _logger = logger;
             _validatorUserRegistration = validatorUserRegistration;
-            _loanRepository = loanRepository;
+            _userRepository = userRepository;
             _auditRepository = auditRepository;
         }
         [AllowAnonymous]
-        [HttpPost]
-        [HttpPost("CreateUserRegistation")]
-        public async Task<ActionResult> CreateUserRegistation(UserRegistration usrRegis)
+        [HttpPost()]
+        public async Task<ActionResult> UserRegistation(UserRegistration usrRegis)
         {
             var validationResult = await _validatorUserRegistration.ValidateAsync(usrRegis);
             List<string> errorlst = new List<string>();
@@ -41,7 +40,7 @@ namespace LoanManagementApi.Controllers
             }
 
             _logger.LogInformation("Creating User Registation");
-            var res = _loanRepository.UserRegistation(usrRegis);
+            var res = _userRepository.UserRegistation(usrRegis);
             if (res != null)
             {
                 _logger.LogInformation("User Registation created successfully for user: {UserName}", usrRegis.UserName);
