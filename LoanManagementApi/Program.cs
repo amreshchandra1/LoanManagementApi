@@ -87,7 +87,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     // TEMPORARY: Un-comment this line to force Azure to show the real error details
-    app.UseDeveloperExceptionPage();
+   // app.UseDeveloperExceptionPage();
 
   //  app.UseHsts();
 }
